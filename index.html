@@ -134,7 +134,7 @@
 <div class="overlay" id="overlay" onclick="if(event.target===this)closeProject()">
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="m-title">
     <button class="close" onclick="closeProject()" aria-label="Close">✕</button>
-    <img class="thumb" id="m-img" alt="">
+    <div id="m-media"></div>
     <div class="modal-body">
       <h3 id="m-title"></h3>
       <div class="meta" id="m-meta"></div>
@@ -163,8 +163,8 @@
 const PROJECTS = [
   {
     id: "dunkerque",
-    image: "images/dunkerque.mp4",
-    students: null, // TODO: number of students
+    image: "images/dunkerque.mp4", // photo (.jpg/.png) or video (.mp4/.webm) both work
+    students: 10,
     report: "dunkerque-report.pdf", reportFr: true,
     title: { en: "Port Development Project – Dunkirk", fr: "Projet d'aménagement portuaire – Dunkerque" },
     meta:  { en: "Partnership Terres Océanes / SeaTech · 2026", fr: "Partenariat Terres Océanes / SeaTech · 2026" },
@@ -185,7 +185,7 @@ const PROJECTS = [
   {
     id: "tipe",
     image: "images/telepherique-brest.jpg",
-    students: null, // TODO
+    students: 1,
     report: "tipe-telepherique-brest.pdf", reportFr: true,
     title: { en: "Brest Cable Car Modeling (TIPE)", fr: "Modélisation du téléphérique de Brest (TIPE)" },
     meta:  { en: "Pre-engineering project · 2025", fr: "Projet de classe préparatoire · 2025" },
@@ -267,11 +267,20 @@ function studentsLabel(p, lang){
   return '👥 ' + p.students + ' ' + (p.students === 1 ? T[lang].student_1 : T[lang].students_n);
 }
 
+function isVideo(path){ return /\.(mp4|webm|mov)$/i.test(path); }
+function mediaHTML(p, withControls){
+  const alt = esc(p.title[currentLang]);
+  if (isVideo(p.image)) {
+    return `<video class="thumb" src="${esc(p.image)}" aria-label="${alt}" autoplay muted loop playsinline preload="metadata"${withControls ? ' controls' : ''}></video>`;
+  }
+  return `<img class="thumb" src="${esc(p.image)}" alt="${alt}" loading="lazy" onerror="this.removeAttribute('src')">`;
+}
+
 function renderProjects(){
   const L = currentLang;
   document.getElementById('projects-grid').innerHTML = PROJECTS.map(p => `
     <button class="pcard" onclick="openProject('${p.id}')">
-      <img class="thumb" src="${esc(p.image)}" alt="${esc(p.title[L])}" loading="lazy" onerror="this.removeAttribute('src')">
+      ${mediaHTML(p, false)}
       <div class="pbody">
         <h3>${esc(p.title[L])}</h3>
         ${p.students != null ? `<span class="badge">${esc(studentsLabel(p, L))}</span>` : ''}
@@ -288,10 +297,7 @@ function renderProjects(){
 function fillModal(){
   const p = PROJECTS.find(x => x.id === openId); if (!p) return;
   const L = currentLang;
-  const img = document.getElementById('m-img');
-  img.alt = p.title[L];
-  img.src = p.image;
-  img.onerror = () => img.removeAttribute('src');
+  document.getElementById('m-media').innerHTML = mediaHTML(p, true);
   document.getElementById('m-title').textContent = p.title[L];
   document.getElementById('m-meta').textContent = p.meta[L];
   const st = document.getElementById('m-students');
@@ -312,6 +318,7 @@ function openProject(id){
 }
 function closeProject(){
   openId = null;
+  document.getElementById('m-media').innerHTML = ''; // stops the video
   document.getElementById('overlay').classList.remove('open');
   document.body.classList.remove('locked');
 }
