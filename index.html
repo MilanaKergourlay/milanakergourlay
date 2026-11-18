@@ -16,7 +16,7 @@
   nav a:hover { color:var(--accent); }
   .lang button { border:1px solid var(--line); background:transparent; color:var(--fg); padding:4px 10px; border-radius:6px; cursor:pointer; }
   .lang button.active { background:var(--accent); color:#fff; border-color:var(--accent); }
-  main { max-width:900px; margin:0 auto; padding:0 20px 60px; }
+  main { max-width:980px; margin:0 auto; padding:0 20px 60px; }
   section { padding-top:48px; }
   h1 { font-size:2.2rem; margin:40px 0 4px; }
   h2 { border-bottom:2px solid var(--accent); display:inline-block; padding-bottom:4px; }
@@ -26,12 +26,36 @@
   .meta { color:var(--muted); font-size:.9rem; margin-bottom:8px; }
   ul { padding-left:20px; }
   a { color:var(--accent); }
-  .btn { display:inline-block; padding:8px 14px; border-radius:8px; background:var(--accent); color:#fff; text-decoration:none; margin:4px 6px 4px 0; }
+  .btn { display:inline-block; padding:8px 14px; border-radius:8px; background:var(--accent); color:#fff; text-decoration:none; margin:4px 6px 4px 0; border:0; cursor:pointer; font:inherit; }
   .tags span { display:inline-block; background:var(--line); border-radius:20px; padding:2px 10px; margin:3px 4px 3px 0; font-size:.85rem; }
+  .tags.skills span { background:transparent; border:1px solid var(--accent); color:var(--accent); }
   .note { background:#fff4d6; color:#6b4e00; border-left:4px solid #e0a800; padding:6px 10px; border-radius:4px; font-size:.9rem; margin:10px 0 6px; }
   .note:empty { display:none; }
   @media (prefers-color-scheme: dark) { .note { background:#3a3016; color:#f5d88a; } }
   footer { text-align:center; color:var(--muted); padding:30px; font-size:.85rem; }
+
+  /* ---------- Projects grid ---------- */
+  .grid { display:grid; grid-template-columns:repeat(auto-fill,minmax(280px,1fr)); gap:20px; margin-top:20px; }
+  .pcard { background:var(--card); border:1px solid var(--line); border-radius:12px; overflow:hidden; cursor:pointer; display:flex; flex-direction:column; transition:transform .15s, box-shadow .15s; text-align:left; padding:0; font:inherit; color:inherit; }
+  .pcard:hover, .pcard:focus-visible { transform:translateY(-4px); box-shadow:0 8px 24px rgba(0,0,0,.15); outline:none; }
+  .thumb { width:100%; aspect-ratio:16/10; object-fit:cover; display:block; background:linear-gradient(135deg,var(--accent),#1b2733); }
+  .pbody { padding:14px 16px 16px; display:flex; flex-direction:column; gap:6px; flex:1; }
+  .pbody h3 { margin:0; font-size:1.1rem; }
+  .pbody p { margin:0; font-size:.93rem; color:var(--muted); }
+  .badge { display:inline-block; background:var(--accent); color:#fff; border-radius:6px; padding:1px 8px; font-size:.8rem; align-self:flex-start; }
+  .label { font-size:.75rem; text-transform:uppercase; letter-spacing:.05em; color:var(--muted); margin-top:6px; }
+  .more { margin-top:auto; padding-top:8px; color:var(--accent); font-size:.9rem; font-weight:600; }
+
+  /* ---------- Modal ---------- */
+  .overlay { position:fixed; inset:0; background:rgba(0,0,0,.6); display:none; align-items:flex-start; justify-content:center; padding:30px 16px; overflow-y:auto; z-index:100; }
+  .overlay.open { display:flex; }
+  .modal { background:var(--card); border-radius:14px; max-width:760px; width:100%; overflow:hidden; position:relative; }
+  .modal .thumb { aspect-ratio:16/7; }
+  .modal-body { padding:20px 24px 26px; }
+  .modal-body h3 { margin:0 0 4px; font-size:1.5rem; }
+  .modal-body p { white-space:pre-line; }
+  .close { position:absolute; top:10px; right:10px; width:36px; height:36px; border-radius:50%; border:0; background:rgba(0,0,0,.6); color:#fff; font-size:1.2rem; cursor:pointer; }
+  body.locked { overflow:hidden; }
 </style>
 </head>
 <body>
@@ -62,31 +86,8 @@
 
   <section id="projects">
     <h2 data-i18n="nav_projects"></h2>
-
-    <div class="card">
-      <h3 data-i18n="p1_title"></h3>
-      <div class="meta" data-i18n="p1_meta"></div>
-      <ul>
-        <li data-i18n="p1_a"></li>
-        <li data-i18n="p1_b"></li>
-        <li data-i18n="p1_c"></li>
-      </ul>
-      <div class="note" data-i18n="fr_warning"></div>
-      <a class="btn" href="dunkerque-report.pdf" target="_blank" data-i18n="read_report"></a>
-    </div>
-
-    <div class="card">
-      <h3 data-i18n="p2_title"></h3>
-      <div class="meta" data-i18n="p2_meta"></div>
-      <ul>
-        <li data-i18n="p2_a"></li>
-        <li data-i18n="p2_b"></li>
-        <li data-i18n="p2_c"></li>
-      </ul>
-      <div class="tags"><span>Python</span><span>Mechanics</span><span>Energy</span></div>
-      <div class="note" data-i18n="fr_warning"></div>
-      <a class="btn" href="tipe-telepherique-brest.pdf" target="_blank" data-i18n="read_doc"></a>
-    </div>
+    <p class="sub" data-i18n="projects_intro"></p>
+    <div class="grid" id="projects-grid"></div>
   </section>
 
   <section id="experience">
@@ -129,22 +130,113 @@
 
 <footer>© 2026 Milana Kergourlay</footer>
 
+<!-- Project detail modal -->
+<div class="overlay" id="overlay" onclick="if(event.target===this)closeProject()">
+  <div class="modal" role="dialog" aria-modal="true" aria-labelledby="m-title">
+    <button class="close" onclick="closeProject()" aria-label="Close">✕</button>
+    <img class="thumb" id="m-img" alt="">
+    <div class="modal-body">
+      <h3 id="m-title"></h3>
+      <div class="meta" id="m-meta"></div>
+      <span class="badge" id="m-students"></span>
+      <div class="label" data-i18n="tools"></div>
+      <div class="tags" id="m-tools"></div>
+      <div class="label" data-i18n="skills_dev"></div>
+      <div class="tags skills" id="m-skills"></div>
+      <div class="label" data-i18n="details"></div>
+      <p id="m-long"></p>
+      <div class="note" id="m-note"></div>
+      <a class="btn" id="m-report" target="_blank"></a>
+    </div>
+  </div>
+</div>
+
 <script>
+/* =====================================================================
+   PROJECTS – edit this list to add / change a project.
+   - image: path to the cover photo (put photos in the "images/" folder)
+   - students: number of students in the team (null = badge hidden)
+   - report: PDF path (null = no report button)
+   - reportFr: true if the report is written in French (shows a warning in EN)
+   Strings are { en:"...", fr:"..." }.
+   ===================================================================== */
+const PROJECTS = [
+  {
+    id: "dunkerque",
+    image: "images/dunkerque.jpg",
+    students: null, // TODO: number of students
+    report: "dunkerque-report.pdf", reportFr: true,
+    title: { en: "Port Development Project – Dunkirk", fr: "Projet d'aménagement portuaire – Dunkerque" },
+    meta:  { en: "Partnership Terres Océanes / SeaTech · 2026", fr: "Partenariat Terres Océanes / SeaTech · 2026" },
+    short: {
+      en: "Analysis of wave attenuation by floating high-performance concrete breakwater modules, tested in a wave flume.",
+      fr: "Analyse de l'atténuation de la houle par des modules de brise-lames flottants en béton hautes performances, testés en canal à houle."
+    },
+    tools:  ["Wave flume (1/66 scale)", "Sensors", "Physical scale model"], // TODO: complete (Matlab? Python?)
+    skills: {
+      en: ["Experimental testing", "Sensor calibration", "Scientific writing", "Teamwork"],
+      fr: ["Essais expérimentaux", "Calibrage de capteurs", "Rédaction scientifique", "Travail d'équipe"]
+    },
+    long: {
+      en: "Analyzed the wave attenuation of three types of high-performance concrete floating breakwater modules.\nRan 1/66th scale wave flume experiments at SeaTech.\nCalibrated the sensors, improved the physical model and wrote the scientific report.",
+      fr: "Analyse de l'atténuation de la houle par trois types de modules de brise-lames flottants en béton hautes performances.\nEssais en canal à houle à l'échelle 1/66e à SeaTech.\nCalibrage des capteurs, amélioration de la maquette et rédaction du rapport scientifique."
+    }
+  },
+  {
+    id: "tipe",
+    image: "images/telepherique-brest.jpg",
+    students: null, // TODO
+    report: "tipe-telepherique-brest.pdf", reportFr: true,
+    title: { en: "Brest Cable Car Modeling (TIPE)", fr: "Modélisation du téléphérique de Brest (TIPE)" },
+    meta:  { en: "Pre-engineering project · 2025", fr: "Projet de classe préparatoire · 2025" },
+    short: {
+      en: "Modeling of Brest's urban cable car: leapfrog layout, mechanical distance compensation and energy recovery.",
+      fr: "Modélisation du téléphérique urbain de Brest : fonctionnement en saute-mouton, compensation des distances et récupération d'énergie."
+    },
+    tools:  ["Python"],
+    skills: {
+      en: ["Mechanics", "Energy", "Numerical simulation", "Modeling"],
+      fr: ["Mécanique", "Énergétique", "Simulation numérique", "Modélisation"]
+    },
+    long: {
+      en: "Studied what makes Brest's urban cable car unique: its leapfrog layout and its energy recovery with supercapacitors.\nModeled the mechanical distance compensation system between the upper and lower ropeways.\nDeveloped a numerical simulation in Python (mechanical and energy concepts).",
+      fr: "Étude des particularités du téléphérique urbain de Brest : fonctionnement en saute-mouton et récupération d'énergie par supercondensateurs.\nModélisation mécanique du système de compensation des distances entre la voie haute et la voie basse.\nSimulation numérique développée en Python (notions de mécanique et d'énergétique)."
+    }
+  },
+  {
+    id: "database",
+    image: "images/database.jpg",
+    students: null, // TODO
+    report: null, reportFr: false, // TODO: e.g. "database-report.pdf"
+    title: { en: "Database Project", fr: "Projet de base de données" }, // TODO: real title
+    meta:  { en: "SeaTech · 2026", fr: "SeaTech · 2026" }, // TODO: year / context
+    short: {
+      en: "Design and implementation of a relational database.", // TODO: describe the project
+      fr: "Conception et réalisation d'une base de données relationnelle." // TODO
+    },
+    tools:  ["SQL"], // TODO: complete (MySQL? PostgreSQL? Python? ...)
+    skills: {
+      en: ["Data modeling", "SQL queries"], // TODO
+      fr: ["Modélisation de données", "Requêtes SQL"]
+    },
+    long: {
+      en: "Detailed description coming soon.", // TODO: longer text
+      fr: "Description détaillée à venir."
+    }
+  }
+];
+
+/* ===================== TEXTS ===================== */
 const T = {
   en: {
     nav_about:"About", nav_projects:"Projects", nav_experience:"Experience", nav_skills:"Skills", nav_contact:"Contact",
     role:"Mechatronics & Robotics engineering student at SeaTech – seeking a 4-month assistant engineer internship (May 2027)",
     about_text:"I am a second-year student at SeaTech (Master's level), specializing in Mechatronics and Robotic Systems. I have solid foundations in kinematics, dynamics, control systems and Linux/ROS environments, and I am eager to contribute to innovative robotics projects abroad.",
-    download_cv:"Download my CV (English)", read_report:"Read the report", read_doc:"Read the document",
+    download_cv:"Download my CV (English)", read_report:"Read the report",
+    projects_intro:"Click on a project to see more details and the full report.",
+    students_n:"students", student_1:"student",
+    tools:"Tools used", skills_dev:"Skills developed", details:"Project details", see_more:"See details →",
     fr_warning:"⚠️ Note: this document is written in French.",
-    p1_title:"Port Development Project – Dunkirk", p1_meta:"Partnership Terres Océanes / SeaTech · 2026",
-    p1_a:"Analyzed wave attenuation of three types of high-performance concrete floating breakwater modules.",
-    p1_b:"Ran 1/66th scale wave flume experiments at SeaTech.",
-    p1_c:"Calibrated sensors, improved the physical model and wrote the scientific report.",
-    p2_title:"Brest Cable Car Modeling (TIPE)", p2_meta:"Pre-engineering project · 2025",
-    p2_a:"Studied what makes Brest's urban cable car unique: its leapfrog layout and energy recovery with supercapacitors.",
-    p2_b:"Modeled the mechanical distance compensation system between the upper and lower ropeways.",
-    p2_c:"Developed a numerical simulation in Python (mechanical and energy concepts).",
     e1_title:"Marine Engineering Intern", e1_meta:"Concarneau, France · June – July 2026",
     e1_a:"Mechanical maintenance on board ships: marine diesel propulsion engines and auxiliary systems (cooling, separators).",
     e1_b:"Technical office: modeled and updated ship blueprints with AutoCAD.",
@@ -154,16 +246,11 @@ const T = {
     nav_about:"À propos", nav_projects:"Projets", nav_experience:"Expérience", nav_skills:"Compétences", nav_contact:"Contact",
     role:"Étudiante ingénieure en mécatronique et robotique à SeaTech – recherche un stage d'assistante ingénieure de 4 mois (mai 2027)",
     about_text:"Je suis en deuxième année à SeaTech (niveau Master), spécialité Mécatronique et Systèmes Robotiques. J'ai de solides bases en cinématique, dynamique, automatique et en environnements Linux/ROS, et je souhaite contribuer à des projets de robotique innovants à l'international.",
-    download_cv:"Télécharger mon CV (français)", read_report:"Lire le rapport", read_doc:"Lire le document",
+    download_cv:"Télécharger mon CV (français)", read_report:"Lire le rapport",
+    projects_intro:"Clique sur un projet pour voir plus de détails et le rapport complet.",
+    students_n:"étudiants", student_1:"étudiant",
+    tools:"Outils utilisés", skills_dev:"Compétences développées", details:"Détails du projet", see_more:"Voir le détail →",
     fr_warning:"",
-    p1_title:"Projet d'aménagement portuaire – Dunkerque", p1_meta:"Partenariat Terres Océanes / SeaTech · 2026",
-    p1_a:"Analyse de l'atténuation de la houle par trois types de modules de brise-lames flottants en béton hautes performances.",
-    p1_b:"Essais en canal à houle à l'échelle 1/66e à SeaTech.",
-    p1_c:"Calibrage des capteurs, amélioration de la maquette et rédaction du rapport scientifique.",
-    p2_title:"Modélisation du téléphérique de Brest (TIPE)", p2_meta:"Projet de classe préparatoire · 2025",
-    p2_a:"Étude des particularités du téléphérique urbain de Brest : fonctionnement en saute-mouton et récupération d'énergie par supercondensateurs.",
-    p2_b:"Modélisation mécanique du système de compensation des distances entre la voie haute et la voie basse.",
-    p2_c:"Simulation numérique développée en Python (notions de mécanique et d'énergétique).",
     e1_title:"Stagiaire en ingénierie navale", e1_meta:"Concarneau, France · juin – juillet 2026",
     e1_a:"Maintenance mécanique à bord de navires : moteurs diesel de propulsion et systèmes auxiliaires (refroidissement, séparateurs).",
     e1_b:"Bureau technique : modélisation et mise à jour de plans de navires sous AutoCAD.",
@@ -171,12 +258,74 @@ const T = {
   }
 };
 
+let currentLang = 'en';
+let openId = null;
+
+function esc(s){ return String(s).replace(/[&<>"]/g, c => ({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c])); }
+function studentsLabel(p, lang){
+  if (p.students == null) return '';
+  return '👥 ' + p.students + ' ' + (p.students === 1 ? T[lang].student_1 : T[lang].students_n);
+}
+
+function renderProjects(){
+  const L = currentLang;
+  document.getElementById('projects-grid').innerHTML = PROJECTS.map(p => `
+    <button class="pcard" onclick="openProject('${p.id}')">
+      <img class="thumb" src="${esc(p.image)}" alt="${esc(p.title[L])}" loading="lazy" onerror="this.removeAttribute('src')">
+      <div class="pbody">
+        <h3>${esc(p.title[L])}</h3>
+        ${p.students != null ? `<span class="badge">${esc(studentsLabel(p, L))}</span>` : ''}
+        <p>${esc(p.short[L])}</p>
+        <div class="label">${esc(T[L].tools)}</div>
+        <div class="tags">${p.tools.map(t => `<span>${esc(t)}</span>`).join('')}</div>
+        <div class="label">${esc(T[L].skills_dev)}</div>
+        <div class="tags skills">${p.skills[L].map(s => `<span>${esc(s)}</span>`).join('')}</div>
+        <div class="more">${esc(T[L].see_more)}</div>
+      </div>
+    </button>`).join('');
+}
+
+function fillModal(){
+  const p = PROJECTS.find(x => x.id === openId); if (!p) return;
+  const L = currentLang;
+  const img = document.getElementById('m-img');
+  img.alt = p.title[L];
+  img.src = p.image;
+  img.onerror = () => img.removeAttribute('src');
+  document.getElementById('m-title').textContent = p.title[L];
+  document.getElementById('m-meta').textContent = p.meta[L];
+  const st = document.getElementById('m-students');
+  st.textContent = studentsLabel(p, L); st.style.display = p.students != null ? '' : 'none';
+  document.getElementById('m-tools').innerHTML = p.tools.map(t => `<span>${esc(t)}</span>`).join('');
+  document.getElementById('m-skills').innerHTML = p.skills[L].map(s => `<span>${esc(s)}</span>`).join('');
+  document.getElementById('m-long').textContent = p.long[L];
+  document.getElementById('m-note').textContent = (p.report && p.reportFr && L === 'en') ? T.en.fr_warning : '';
+  const r = document.getElementById('m-report');
+  if (p.report) { r.href = p.report; r.textContent = T[L].read_report; r.style.display = ''; }
+  else { r.style.display = 'none'; }
+}
+
+function openProject(id){
+  openId = id; fillModal();
+  document.getElementById('overlay').classList.add('open');
+  document.body.classList.add('locked');
+}
+function closeProject(){
+  openId = null;
+  document.getElementById('overlay').classList.remove('open');
+  document.body.classList.remove('locked');
+}
+document.addEventListener('keydown', e => { if (e.key === 'Escape') closeProject(); });
+
 function setLang(lang) {
+  currentLang = lang;
   document.documentElement.lang = lang;
   document.querySelectorAll('[data-i18n]').forEach(el => { el.textContent = T[lang][el.dataset.i18n]; });
   document.getElementById('cv-link').href = 'CV_Milana_Kergourlay_' + lang.toUpperCase() + '.pdf';
   document.getElementById('btn-en').classList.toggle('active', lang === 'en');
   document.getElementById('btn-fr').classList.toggle('active', lang === 'fr');
+  renderProjects();
+  if (openId) fillModal();
   try { localStorage.setItem('lang', lang); } catch (e) {}
 }
 
