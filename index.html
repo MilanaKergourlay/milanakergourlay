@@ -206,22 +206,22 @@ const PROJECTS = [
   {
     id: "database",
     image: "images/database.jpg",
-    students: null, // TODO
-    report: null, reportFr: false, // TODO: e.g. "database-report.pdf"
-    title: { en: "Database Project", fr: "Projet de base de données" }, // TODO: real title
-    meta:  { en: "SeaTech · 2026", fr: "SeaTech · 2026" }, // TODO: year / context
+    students: 1, // individual project
+    report: "database-report.pdf", reportFr: true,
+    title: { en: "Database Design – Couture To The Max", fr: "Base de données – Couture To The Max" },
+    meta:  { en: "SeaTech, 1st year · Database course (supervisor: Christophe De Luigi) · May 2026", fr: "SeaTech, 1re année · Cours de bases de données (enseignant : Christophe De Luigi) · mai 2026" },
     short: {
-      en: "Design and implementation of a relational database.", // TODO: describe the project
-      fr: "Conception et réalisation d'une base de données relationnelle." // TODO
+      en: "Design of a relational database for a fashion house: collections, products, production, customers and sales.",
+      fr: "Conception d'une base de données relationnelle pour une maison de couture : collections, produits, production, clients et ventes."
     },
-    tools:  ["SQL"], // TODO: complete (MySQL? PostgreSQL? Python? ...)
+    tools:  ["SQL", "Relational modeling", "Entity-relationship schema"],
     skills: {
-      en: ["Data modeling", "SQL queries"], // TODO
-      fr: ["Modélisation de données", "Requêtes SQL"]
+      en: ["Data modeling", "Integrity constraints", "SQL (DDL & queries)", "Requirements analysis"],
+      fr: ["Modélisation de données", "Contraintes d'intégrité", "SQL (création & requêtes)", "Analyse du besoin"]
     },
     long: {
-      en: "Detailed description coming soon.", // TODO: longer text
-      fr: "Description détaillée à venir."
+      en: "Individual project for the database course, based on a fictional fashion house, Couture To The Max.\nThe brand develops seasonal collections presented at fashion shows; each product exists in several sizes and colors, is made by workshops from materials supplied by suppliers, designed by one or several designers, and sold to customers through orders and payments.\nI analyzed these needs and designed a relational schema split into three kinds of tables: main tables (brand, collection, product, customer, order), secondary tables (size, color, material, address, payment...) and relation tables (product variant, order line, production, product-material, designer-product). This structure avoids duplicates and input errors, and keeps stock and orders consistent.\nFor each table, I chose the data types and constraints (primary keys, NOT NULL, UNIQUE) and defined the foreign key strategies: RESTRICT to protect business data (e.g. a customer with orders cannot be deleted), CASCADE where a link has no reason to exist anymore (e.g. the variants of a deleted product).\nI wrote the SQL table creation scripts and five example queries (nested queries, filters and aggregation with SUM / GROUP BY), such as the total quantity produced per variant in a given workshop or the orders above 500 euros.",
+      fr: "Projet individuel du cours de bases de données, autour d'une maison de couture fictive, Couture To The Max.\nLa marque développe des collections saisonnières présentées lors de défilés ; chaque produit existe en plusieurs tailles et couleurs, est fabriqué par des ateliers à partir de matières fournies par des fournisseurs, conçu par un ou plusieurs designers, et vendu à des clients via des commandes et des paiements.\nJ'ai analysé ces besoins et conçu un schéma relationnel découpé en trois types de tables : les tables principales (marque, collection, produit, client, commande), les tables secondaires (taille, couleur, matière, adresse, paiement...) et les tables de relation (variante de produit, ligne de commande, production, produit-matière, designer-produit). Cette organisation évite les doublons et les erreurs de saisie, et garde les stocks et les commandes cohérents.\nPour chaque table, j'ai choisi les types de données et les contraintes (clés primaires, NOT NULL, UNIQUE) et défini les stratégies de clés étrangères : RESTRICT pour protéger les données métier (ex : on ne supprime pas un client qui a des commandes), CASCADE quand un lien n'a plus de raison d'exister (ex : les variantes d'un produit supprimé).\nJ'ai rédigé les scripts SQL de création de tables et cinq exemples de requêtes (requêtes imbriquées, filtres et agrégation avec SUM / GROUP BY), comme la quantité totale produite par variante dans un atelier donné ou les commandes de plus de 500 euros."
     }
   }
 ];
