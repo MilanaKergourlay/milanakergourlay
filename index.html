@@ -185,7 +185,6 @@ const PROJECTS = [
   {
     id: "tipe",
     image: "images/telepherique-brest.jpg",
-    students: 1,
     report: "tipe-telepherique-brest.pdf", reportFr: true,
     title: { en: "Brest Cable Car Modeling (TIPE)", fr: "Modélisation du téléphérique de Brest (TIPE)" },
     meta:  { en: "Pre-engineering project · 2025", fr: "Projet de classe préparatoire · 2025" },
@@ -206,7 +205,6 @@ const PROJECTS = [
   {
     id: "database",
     image: "images/database.jpg",
-    students: 1, // individual project
     report: "database-report.pdf", reportFr: true,
     title: { en: "Database Design – Couture To The Max", fr: "Base de données – Couture To The Max" },
     meta:  { en: "SeaTech, 1st year · Database course (supervisor: Christophe De Luigi) · May 2026", fr: "SeaTech, 1re année · Cours de bases de données (enseignant : Christophe De Luigi) · mai 2026" },
@@ -224,6 +222,7 @@ const PROJECTS = [
       fr: "Projet individuel du cours de bases de données, autour d'une maison de couture fictive, Couture To The Max.\nLa marque développe des collections saisonnières présentées lors de défilés ; chaque produit existe en plusieurs tailles et couleurs, est fabriqué par des ateliers à partir de matières fournies par des fournisseurs, conçu par un ou plusieurs designers, et vendu à des clients via des commandes et des paiements.\nJ'ai analysé ces besoins et conçu un schéma relationnel découpé en trois types de tables : les tables principales (marque, collection, produit, client, commande), les tables secondaires (taille, couleur, matière, adresse, paiement...) et les tables de relation (variante de produit, ligne de commande, production, produit-matière, designer-produit). Cette organisation évite les doublons et les erreurs de saisie, et garde les stocks et les commandes cohérents.\nPour chaque table, j'ai choisi les types de données et les contraintes (clés primaires, NOT NULL, UNIQUE) et défini les stratégies de clés étrangères : RESTRICT pour protéger les données métier (ex : on ne supprime pas un client qui a des commandes), CASCADE quand un lien n'a plus de raison d'exister (ex : les variantes d'un produit supprimé).\nJ'ai rédigé les scripts SQL de création de tables et cinq exemples de requêtes (requêtes imbriquées, filtres et agrégation avec SUM / GROUP BY), comme la quantité totale produite par variante dans un atelier donné ou les commandes de plus de 500 euros."
     }
   }
+ 
 ];
 
 /* ===================== TEXTS ===================== */
