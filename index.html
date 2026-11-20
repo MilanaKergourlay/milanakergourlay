@@ -56,6 +56,20 @@
   .modal-body p { white-space:pre-line; }
   .close { position:absolute; top:10px; right:10px; width:36px; height:36px; border-radius:50%; border:0; background:rgba(0,0,0,.6); color:#fff; font-size:1.2rem; cursor:pointer; }
   body.locked { overflow:hidden; }
+
+  /* ---------- "Other projects" box ---------- */
+  .ph { display:flex; align-items:center; justify-content:center; color:#fff; font-weight:700; }
+  .cover { font-size:3.2rem; }
+  .olist { display:flex; flex-direction:column; gap:12px; margin-top:14px; }
+  .orow { display:flex; gap:14px; text-align:left; background:var(--bg); border:1px solid var(--line); border-radius:10px; padding:10px; cursor:pointer; font:inherit; color:inherit; width:100%; transition:border-color .15s, transform .15s; }
+  .orow:hover, .orow:focus-visible { border-color:var(--accent); transform:translateX(3px); outline:none; }
+  .othumb { flex:0 0 120px; border-radius:8px; overflow:hidden; align-self:flex-start; }
+  .othumb .thumb { aspect-ratio:4/3; }
+  .obody { display:flex; flex-direction:column; gap:4px; min-width:0; }
+  .obody h4 { margin:0; font-size:1rem; }
+  .obody p { margin:0; font-size:.88rem; color:var(--muted); white-space:normal; }
+  .back { background:transparent; color:var(--accent); border:1px solid var(--accent); padding:4px 10px; margin:0 0 10px; }
+  @media (max-width:520px) { .orow { flex-direction:column; } .othumb { flex-basis:auto; width:100%; } }
 </style>
 </head>
 <body>
@@ -120,10 +134,10 @@
     <h2 data-i18n="nav_contact"></h2>
     <div class="card">
       <p>📧 <a href="mailto:milanakerg@gmail.com">milanakerg@gmail.com</a></p>
-      <p>📱 <a href="tel:+33768375025">+33 7 68 37 50 25</a></p>
+      <p>📱 <a href="tel:+33768375076">+33 7 68 37 50 25</a></p>
       <p>📍 Toulon, France</p>
       <p>🔗 <a href="https://github.com/MilanaKergourlay" target="_blank">GitHub</a> ·
-         <a href="www.linkedin.com/in/milana-kergourlay-b816193b6" target="_blank">LinkedIn</a></p>
+         <a href="https://www.linkedin.com/in/TON-PROFIL" target="_blank">LinkedIn</a></p>
     </div>
   </section>
 </main>
@@ -134,8 +148,11 @@
 <div class="overlay" id="overlay" onclick="if(event.target===this)closeProject()">
   <div class="modal" role="dialog" aria-modal="true" aria-labelledby="m-title">
     <button class="close" onclick="closeProject()" aria-label="Close">✕</button>
+    <div class="modal-body" id="m-listview" style="display:none"></div>
+    <div id="m-detail">
     <div id="m-media"></div>
     <div class="modal-body">
+      <button class="btn back" id="m-back" onclick="openOthers()" style="display:none"></button>
       <h3 id="m-title"></h3>
       <div class="meta" id="m-meta"></div>
       <span class="badge" id="m-students"></span>
@@ -147,6 +164,7 @@
       <p id="m-long"></p>
       <div class="note" id="m-note"></div>
       <a class="btn" id="m-report" target="_blank"></a>
+    </div>
     </div>
   </div>
 </div>
@@ -185,6 +203,7 @@ const PROJECTS = [
   {
     id: "tipe",
     image: "images/telepherique-brest.jpg",
+    students: 1,
     report: "tipe-telepherique-brest.pdf", reportFr: true,
     title: { en: "Brest Cable Car Modeling (TIPE)", fr: "Modélisation du téléphérique de Brest (TIPE)" },
     meta:  { en: "Pre-engineering project · 2025", fr: "Projet de classe préparatoire · 2025" },
@@ -205,7 +224,10 @@ const PROJECTS = [
   {
     id: "database",
     image: "images/database.jpg",
-    report: "database-report.pdf", reportFr: true,
+    group: "other",
+    topic: { en: "Database", fr: "Base de données" },
+    students: 1, // individual project
+    report: "projet_bd.pdf", reportFr: true,
     title: { en: "Database Design – Couture To The Max", fr: "Base de données – Couture To The Max" },
     meta:  { en: "SeaTech, 1st year · Database course (supervisor: Christophe De Luigi) · May 2026", fr: "SeaTech, 1re année · Cours de bases de données (enseignant : Christophe De Luigi) · mai 2026" },
     short: {
@@ -221,8 +243,122 @@ const PROJECTS = [
       en: "Individual project for the database course, based on a fictional fashion house, Couture To The Max.\nThe brand develops seasonal collections presented at fashion shows; each product exists in several sizes and colors, is made by workshops from materials supplied by suppliers, designed by one or several designers, and sold to customers through orders and payments.\nI analyzed these needs and designed a relational schema split into three kinds of tables: main tables (brand, collection, product, customer, order), secondary tables (size, color, material, address, payment...) and relation tables (product variant, order line, production, product-material, designer-product). This structure avoids duplicates and input errors, and keeps stock and orders consistent.\nFor each table, I chose the data types and constraints (primary keys, NOT NULL, UNIQUE) and defined the foreign key strategies: RESTRICT to protect business data (e.g. a customer with orders cannot be deleted), CASCADE where a link has no reason to exist anymore (e.g. the variants of a deleted product).\nI wrote the SQL table creation scripts and five example queries (nested queries, filters and aggregation with SUM / GROUP BY), such as the total quantity produced per variant in a given workshop or the orders above 500 euros.",
       fr: "Projet individuel du cours de bases de données, autour d'une maison de couture fictive, Couture To The Max.\nLa marque développe des collections saisonnières présentées lors de défilés ; chaque produit existe en plusieurs tailles et couleurs, est fabriqué par des ateliers à partir de matières fournies par des fournisseurs, conçu par un ou plusieurs designers, et vendu à des clients via des commandes et des paiements.\nJ'ai analysé ces besoins et conçu un schéma relationnel découpé en trois types de tables : les tables principales (marque, collection, produit, client, commande), les tables secondaires (taille, couleur, matière, adresse, paiement...) et les tables de relation (variante de produit, ligne de commande, production, produit-matière, designer-produit). Cette organisation évite les doublons et les erreurs de saisie, et garde les stocks et les commandes cohérents.\nPour chaque table, j'ai choisi les types de données et les contraintes (clés primaires, NOT NULL, UNIQUE) et défini les stratégies de clés étrangères : RESTRICT pour protéger les données métier (ex : on ne supprime pas un client qui a des commandes), CASCADE quand un lien n'a plus de raison d'exister (ex : les variantes d'un produit supprimé).\nJ'ai rédigé les scripts SQL de création de tables et cinq exemples de requêtes (requêtes imbriquées, filtres et agrégation avec SUM / GROUP BY), comme la quantité totale produite par variante dans un atelier donné ou les commandes de plus de 500 euros."
     }
+  },
+  {
+    id: "hydro",
+    group: "other",
+    topic: { en: "Hydrodynamics", fr: "Hydrodynamique" },
+    image: null, // optional: "images/hydro.jpg" (photo or .mp4)
+    students: 5,
+    report: "tp_hydro_ondes.pdf", reportFr: true,
+    title: { en: "Wave Reflection on a Beach – Wave Flume Lab", fr: "Réflexion de la houle sur une plage – TP canal à houle" },
+    meta:  { en: "SeaTech · Hydrodynamics lab (supervisor: Olivier Lecalve) · 2026", fr: "SeaTech · TP d'hydrodynamique (encadrant : Olivier Lecalve) · 2026" },
+    short: {
+      en: "Experimental study of how waves reflect on an inclined beach in the SeaTech wave flume, measured with resistive probes.",
+      fr: "Étude expérimentale de la réflexion de la houle sur une plage inclinée dans le canal à houle de SeaTech, mesurée avec des sondes résistives."
+    },
+    tools:  ["Wave flume", "Resistive wave probes"],
+    skills: {
+      en: ["Sensor calibration", "Experimental measurement", "Wave physics", "Data analysis"],
+      fr: ["Calibrage de capteurs", "Mesures expérimentales", "Physique des ondes", "Analyse de données"]
+    },
+    long: {
+      en: "Lab work in a team of five, carried out in the wave flume of the SeaTech marine lab.\nA piston wavemaker generates an incident wave. When it reaches the beach at the other end of the flume it is partially reflected, and the superposition of the incident and reflected waves forms a quasi-standing wave. Using complex notation, we showed that the extrema of the amplitude envelope give the incident amplitude, ai = (Amax + Amin) / 2, and the reflection coefficient, R = (Amax − Amin) / (Amax + Amin).\nIn practice, we first calibrated the resistive probes with a linear regression between immersed length and measured voltage. We then measured the wave envelope over about two wavelengths for two wave periods (0.72 s and 0.9 s) and two beach slopes (21.8° and 30°), and computed the Iribarren number for each configuration.\nResults: the reflection is never total (R < 1), because energy is lost by wave breaking and friction on the beach. R increases with the Iribarren number (from about 0.18 to 0.65 across our four configurations), so a steeper beach or a less steep wave reflects more. The spatial period of the amplitude modulation is half a wavelength, as predicted by the theory.",
+      fr: "Travail pratique en équipe de cinq, réalisé dans le canal à houle de la salle TP Marine de SeaTech.\nUn batteur à piston génère une onde incidente. Quand elle atteint la plage à l'autre extrémité du canal, elle est partiellement réfléchie, et la superposition de l'onde incidente et de l'onde réfléchie forme une onde quasi stationnaire. En notation complexe, nous avons montré que les extrema de l'enveloppe d'amplitude donnent l'amplitude incidente, ai = (Amax + Amin) / 2, et le coefficient de réflexion, R = (Amax − Amin) / (Amax + Amin).\nEn pratique, nous avons d'abord étalonné les sondes résistives par régression linéaire entre la longueur immergée et la tension mesurée. Nous avons ensuite mesuré l'enveloppe de la houle sur environ deux longueurs d'onde pour deux périodes de batteur (0,72 s et 0,9 s) et deux pentes de plage (21,8° et 30°), puis calculé le nombre d'Iribarren de chaque configuration.\nRésultats : la réflexion n'est jamais totale (R < 1), car de l'énergie est perdue par déferlement et par frottement sur la plage. R augmente avec le nombre d'Iribarren (d'environ 0,18 à 0,65 sur nos quatre configurations) : une plage plus pentue ou une houle moins cambrée réfléchit davantage. La période spatiale de la modulation d'amplitude vaut une demi-longueur d'onde, comme le prévoit la théorie."
+    }
+  },
+  {
+    id: "calc1",
+    group: "other",
+    topic: { en: "Scientific computing", fr: "Calcul scientifique" },
+    image: null, // optional: "images/calcul-1.jpg"
+    students: 3,
+    report: "TP1-KERGOURLAY_Milana_JOUVE_Charlotte_GOUZE_Ilona.pdf", reportFr: true,
+    title: { en: "Scientific Computing I – Nonlinear Equations", fr: "Calcul scientifique I – Équations non linéaires" },
+    meta:  { en: "SeaTech · Numerical analysis (supervisor: Jacques Schneider) · 2026", fr: "SeaTech · Analyse numérique (encadrant : Jacques Schneider) · 2026" },
+    short: {
+      en: "Comparison of the fixed-point, Newton and secant methods to solve x − e^(−x) = 0, with experimental convergence orders.",
+      fr: "Comparaison des méthodes du point fixe, de Newton et de la sécante pour résoudre x − e^(−x) = 0, avec les ordres de convergence mesurés."
+    },
+    tools:  ["MATLAB"],
+    skills: {
+      en: ["Numerical analysis", "Algorithm implementation", "Convergence analysis", "Scientific writing"],
+      fr: ["Analyse numérique", "Implémentation d'algorithmes", "Analyse de convergence", "Rédaction scientifique"]
+    },
+    long: {
+      en: "Numerical analysis project done in MATLAB by a team of three.\nGoal: find the unique root on [0, 1] of f(x) = x − e^(−x) with iterative methods, and compare their speed of convergence and accuracy against a reference solution computed to 10^(−15).\nWe implemented and compared three methods: fixed point (with several rewritings of the equation), Newton's algorithm, and the secant method. We measured the convergence order experimentally and compared it with the theoretical predictions.\nConclusions: Newton is the most powerful method in terms of order, but a well-chosen fixed-point formulation is a solid alternative. For the secant method, the experimental results illustrate that the golden ratio is its order of convergence.",
+      fr: "Projet d'analyse numérique réalisé sous MATLAB en équipe de trois.\nObjectif : trouver la racine unique sur [0, 1] de f(x) = x − e^(−x) avec des méthodes itératives, et comparer leur vitesse de convergence et leur précision par rapport à une solution de référence calculée à 10^(−15).\nNous avons implémenté et comparé trois méthodes : le point fixe (avec plusieurs réécritures de l'équation), l'algorithme de Newton et la méthode des sécantes. Nous avons mesuré l'ordre de convergence expérimentalement et l'avons comparé aux prédictions théoriques.\nConclusions : Newton est la méthode la plus puissante en termes d'ordre, mais une formulation bien choisie du point fixe reste une alternative solide. Pour la sécante, les résultats illustrent que l'ordre de convergence est le nombre d'or."
+    }
+  },
+  {
+    id: "calc2",
+    group: "other",
+    topic: { en: "Scientific computing", fr: "Calcul scientifique" },
+    image: null, // optional: "images/calcul-2.jpg"
+    students: 3,
+    report: "tp_2_Milana_Kergourlay_Clerie_PozinRoux_Ambre_Duchemin_1.pdf", reportFr: false,
+    title: { en: "Scientific Computing II – Polynomial Interpolation", fr: "Calcul scientifique II – Interpolation polynomiale" },
+    meta:  { en: "SeaTech · Numerical analysis (supervisor: Mehmet Ersoy) · 2026", fr: "SeaTech · Analyse numérique (encadrant : Mehmet Ersoy) · 2026" },
+    short: {
+      en: "Study of the Runge phenomenon in polynomial interpolation, and how piecewise interpolation and Chebyshev points fix it.",
+      fr: "Étude du phénomène de Runge en interpolation polynomiale, et de sa correction par l'interpolation par morceaux et les points de Tchebychev."
+    },
+    tools:  ["MATLAB"],
+    skills: {
+      en: ["Numerical analysis", "Error estimation", "Algorithm implementation", "Scientific writing"],
+      fr: ["Analyse numérique", "Estimation d'erreur", "Implémentation d'algorithmes", "Rédaction scientifique"]
+    },
+    long: {
+      en: "Numerical analysis project done in MATLAB by a team of three. The report is written in English, with a French abstract.\nGoal: study how the distribution of the interpolation points changes the behavior and convergence of polynomials built with the divided differences method.\nWe interpolated cos(x) and 1 / (1 + x²) on [−5, 5] with equidistant points. For cos(x), the error tends to zero as the degree n grows. For 1 / (1 + x²), it blows up near the edges of the interval: this is the Runge phenomenon.\nWe then tested two remedies. Piecewise interpolation splits the interval into smaller sub-intervals, and the total error converges to zero. Chebyshev points, which concentrate the nodes near the edges, drastically reduce the error. Combining both gives the smallest error over the whole interval, with no spurious oscillations, even for a high degree.",
+      fr: "Projet d'analyse numérique réalisé sous MATLAB en équipe de trois. Le rapport est rédigé en anglais, avec un résumé en français.\nObjectif : étudier comment la répartition des points d'interpolation change le comportement et la convergence des polynômes construits par la méthode des différences divisées.\nNous avons interpolé cos(x) et 1 / (1 + x²) sur [−5, 5] avec des points équidistants. Pour cos(x), l'erreur tend vers zéro quand le degré n augmente. Pour 1 / (1 + x²), elle explose près des bords de l'intervalle : c'est le phénomène de Runge.\nNous avons ensuite testé deux remèdes. L'interpolation par morceaux découpe l'intervalle en sous-intervalles plus petits, et l'erreur totale converge vers zéro. Les points de Tchebychev, qui concentrent les nœuds près des bords, réduisent fortement l'erreur. En combinant les deux, l'erreur est la plus faible sur tout l'intervalle, sans oscillations parasites, même pour un degré élevé."
+    }
+  },
+  {
+    id: "calc3",
+    group: "other",
+    topic: { en: "Scientific computing", fr: "Calcul scientifique" },
+    image: null, // optional: "images/calcul-3.jpg"
+    students: 3,
+    report: "TP_Int_gration_Num_rique.pdf", reportFr: true,
+    title: { en: "Scientific Computing III – Numerical Integration", fr: "Calcul scientifique III – Intégration numérique" },
+    meta:  { en: "SeaTech · Numerical analysis (supervisor: Jacques Schneider) · 2026", fr: "SeaTech · Analyse numérique (encadrant : Jacques Schneider) · 2026" },
+    short: {
+      en: "Comparison of the rectangle, trapezoid and Simpson quadrature rules, and how the regularity of a function affects the error.",
+      fr: "Comparaison des formules de quadrature des rectangles, des trapèzes et de Simpson, et effet de la régularité de la fonction sur l'erreur."
+    },
+    tools:  ["MATLAB"],
+    skills: {
+      en: ["Numerical analysis", "Error analysis", "Algorithm implementation", "Scientific writing"],
+      fr: ["Analyse numérique", "Analyse d'erreur", "Implémentation d'algorithmes", "Rédaction scientifique"]
+    },
+    long: {
+      en: "Numerical analysis project done in MATLAB by a team of three.\nGoal: compare numerical integration methods and study how the approximation error evolves with the number of subdivisions n.\nWe implemented the rectangle, trapezoid and Simpson rules and applied them to a regular function (the exponential, integrated on [0, 1]) and to a function with non-differentiable points, f(x) = |3x⁴ − 1|.\nConclusions: first-order methods are the cheapest but the least accurate, second-order methods give the best compromise between accuracy and cost, and Simpson's rule (order 4) beats all the others with very few subdivisions. The second function shows that non-differentiable points strongly slow down convergence.\nA comparison with probabilistic (Monte-Carlo) methods was planned and is left as an extension.",
+      fr: "Projet d'analyse numérique réalisé sous MATLAB en équipe de trois.\nObjectif : comparer des méthodes d'intégration numérique et étudier l'évolution de l'erreur d'approximation en fonction du nombre de subdivisions n.\nNous avons implémenté les méthodes des rectangles, des trapèzes et de Simpson, et les avons appliquées à une fonction régulière (l'exponentielle, intégrée sur [0, 1]) et à une fonction avec des points de non-dérivabilité, f(x) = |3x⁴ − 1|.\nConclusions : les méthodes d'ordre 1 sont les moins coûteuses mais les moins précises, les méthodes d'ordre 2 offrent le meilleur compromis entre précision et coût, et la méthode de Simpson (ordre 4) dépasse toutes les autres avec très peu de subdivisions. La seconde fonction montre que les points de non-dérivabilité ralentissent fortement la convergence.\nUne comparaison avec les méthodes probabilistes (Monte-Carlo) était prévue et reste une piste d'extension."
+    }
+  },
+  {
+    id: "elec",
+    group: "other",
+    topic: { en: "Electronics", fr: "Électronique" },
+    image: null, // optional: "images/ltspice.jpg"
+    students: 2,
+    report: "tp_elec_1.pdf", reportFr: true,
+    title: { en: "Circuit Simulation with LTspice", fr: "Simulation de circuits sous LTspice" },
+    meta:  { en: "SeaTech, 2A SYSMER · Electronics lab (supervisor: Hervé Barthélémy) · 2026", fr: "SeaTech, 2A SYSMER · TP d'électronique (enseignant : Hervé Barthélémy) · 2026" },
+    short: {
+      en: "Simulation of an astable oscillator, electronic filters and a DC motor with its switching transistors, using LTspice.",
+      fr: "Simulation d'un oscillateur astable, de filtres électroniques et d'un moteur à courant continu avec ses transistors de commutation, sous LTspice."
+    },
+    tools:  ["LTspice"],
+    skills: {
+      en: ["Circuit simulation", "Analog electronics", "Electronic filters", "DC motor control"],
+      fr: ["Simulation de circuits", "Électronique analogique", "Filtres électroniques", "Commande de moteur DC"]
+    },
+    long: {
+      en: "Electronics lab done in pairs with LTspice, the free circuit simulator from Analog Devices. Simulation lets us observe the behavior of a circuit much faster than building it and measuring it with an oscilloscope.\nPart 1: learn schematic capture in LTspice by simulating a capacitive relaxation astable oscillator and electronic filters.\nPart 2: study the behavior of a brushed DC motor and of the switching transistors that drive it.",
+      fr: "TP d'électronique réalisé en binôme avec LTspice, le simulateur de circuits gratuit d'Analog Devices. La simulation permet d'observer le comportement d'un circuit bien plus vite qu'en le montant et en le mesurant à l'oscilloscope.\nPartie 1 : prise en main de la saisie de schéma sous LTspice avec la simulation d'un oscillateur astable à relaxation capacitif et de filtres électroniques.\nPartie 2 : étude du comportement d'un moteur à courant continu à balais et des transistors de commutation qui le pilotent."
+    }
   }
- 
 ];
 
 /* ===================== TEXTS ===================== */
@@ -233,6 +369,9 @@ const T = {
     about_text:"I am a second-year student at SeaTech (Master's level), specializing in Mechatronics and Robotic Systems. I have solid foundations in kinematics, dynamics, control systems and Linux/ROS environments, and I am eager to contribute to innovative robotics projects abroad.",
     download_cv:"Download my CV (English)", read_report:"Read the report",
     projects_intro:"Click on a project to see more details and the full report.",
+    others_title:"Other projects", others_intro:"Lab work and course projects. Click on one to see its details and report.",
+    others_short:"Database, hydrodynamics, scientific computing and electronics projects from my engineering courses.",
+    n_projects:"projects", back_others:"← Other projects", see_all:"See all projects →",
     students_n:"students", student_1:"student",
     tools:"Tools used", skills_dev:"Skills developed", details:"Project details", see_more:"See details →",
     fr_warning:"⚠️ Note: this document is written in French.",
@@ -247,6 +386,9 @@ const T = {
     about_text:"Je suis en deuxième année à SeaTech (niveau Master), spécialité Mécatronique et Systèmes Robotiques. J'ai de solides bases en cinématique, dynamique, automatique et en environnements Linux/ROS, et je souhaite contribuer à des projets de robotique innovants à l'international.",
     download_cv:"Télécharger mon CV (français)", read_report:"Lire le rapport",
     projects_intro:"Clique sur un projet pour voir plus de détails et le rapport complet.",
+    others_title:"Autres projets", others_intro:"Travaux pratiques et projets de cours. Clique sur un projet pour voir les détails et le rapport.",
+    others_short:"Projets de base de données, d'hydrodynamique, de calcul scientifique et d'électronique réalisés pendant ma formation d'ingénieure.",
+    n_projects:"projets", back_others:"← Autres projets", see_all:"Voir tous les projets →",
     students_n:"étudiants", student_1:"étudiant",
     tools:"Outils utilisés", skills_dev:"Compétences développées", details:"Détails du projet", see_more:"Voir le détail →",
     fr_warning:"",
@@ -269,15 +411,35 @@ function studentsLabel(p, lang){
 function isVideo(path){ return /\.(mp4|webm|mov)$/i.test(path); }
 function mediaHTML(p, withControls){
   const alt = esc(p.title[currentLang]);
+  if (!p.image) return `<div class="thumb ph" role="img" aria-label="${alt}"></div>`; // no photo yet: gradient
   if (isVideo(p.image)) {
     return `<video class="thumb" src="${esc(p.image)}" aria-label="${alt}" autoplay muted loop playsinline preload="metadata"${withControls ? ' controls' : ''}></video>`;
   }
-  return `<img class="thumb" src="${esc(p.image)}" alt="${alt}" loading="lazy" onerror="this.removeAttribute('src')">`;
+  return `<img class="thumb" src="${esc(p.image)}" alt="${alt}" loading="lazy" onerror="this.removeAttribute('src');this.style.color='transparent'">`;
+}
+
+function othersList(){ return PROJECTS.filter(p => p.group === 'other'); }
+
+function othersCardHTML(){
+  const L = currentLang, list = othersList();
+  if (!list.length) return '';
+  const topics = [...new Set(list.map(p => p.topic[L]))];
+  return `
+    <button class="pcard" onclick="openOthers()">
+      <div class="thumb ph cover" aria-hidden="true">${list.length}</div>
+      <div class="pbody">
+        <h3>${esc(T[L].others_title)}</h3>
+        <span class="badge">${list.length} ${esc(T[L].n_projects)}</span>
+        <p>${esc(T[L].others_short)}</p>
+        <div class="tags skills">${topics.map(t => `<span>${esc(t)}</span>`).join('')}</div>
+        <div class="more">${esc(T[L].see_all)}</div>
+      </div>
+    </button>`;
 }
 
 function renderProjects(){
   const L = currentLang;
-  document.getElementById('projects-grid').innerHTML = PROJECTS.map(p => `
+  document.getElementById('projects-grid').innerHTML = PROJECTS.filter(p => p.group !== 'other').map(p => `
     <button class="pcard" onclick="openProject('${p.id}')">
       ${mediaHTML(p, false)}
       <div class="pbody">
@@ -290,12 +452,40 @@ function renderProjects(){
         <div class="tags skills">${p.skills[L].map(s => `<span>${esc(s)}</span>`).join('')}</div>
         <div class="more">${esc(T[L].see_more)}</div>
       </div>
-    </button>`).join('');
+    </button>`).join('') + othersCardHTML();
 }
 
+const OTHERS_ID = '__others';
+
 function fillModal(){
-  const p = PROJECTS.find(x => x.id === openId); if (!p) return;
   const L = currentLang;
+  const listView = document.getElementById('m-listview');
+  const detail = document.getElementById('m-detail');
+  if (openId === OTHERS_ID) {
+    document.getElementById('m-media').innerHTML = ''; // stops any video
+    detail.style.display = 'none';
+    listView.style.display = '';
+    listView.innerHTML = `
+      <h3>${esc(T[L].others_title)}</h3>
+      <div class="meta">${esc(T[L].others_intro)}</div>
+      <div class="olist">` + othersList().map(p => `
+        <button class="orow" onclick="openProject('${p.id}')">
+          <div class="othumb">${mediaHTML(p, false)}</div>
+          <div class="obody">
+            <h4>${esc(p.title[L])}</h4>
+            ${p.students != null ? `<span class="badge">${esc(studentsLabel(p, L))}</span>` : ''}
+            <p>${esc(p.short[L])}</p>
+            <div class="tags">${p.tools.map(t => `<span>${esc(t)}</span>`).join('')}</div>
+          </div>
+        </button>`).join('') + `</div>`;
+    return;
+  }
+  const p = PROJECTS.find(x => x.id === openId); if (!p) return;
+  listView.style.display = 'none';
+  detail.style.display = '';
+  const back = document.getElementById('m-back');
+  back.textContent = T[L].back_others;
+  back.style.display = p.group === 'other' ? '' : 'none';
   document.getElementById('m-media').innerHTML = mediaHTML(p, true);
   document.getElementById('m-title').textContent = p.title[L];
   document.getElementById('m-meta').textContent = p.meta[L];
@@ -310,11 +500,15 @@ function fillModal(){
   else { r.style.display = 'none'; }
 }
 
-function openProject(id){
+function showModal(id){
   openId = id; fillModal();
-  document.getElementById('overlay').classList.add('open');
+  const o = document.getElementById('overlay');
+  o.classList.add('open');
+  o.scrollTop = 0;
   document.body.classList.add('locked');
 }
+function openProject(id){ showModal(id); }
+function openOthers(){ showModal(OTHERS_ID); }
 function closeProject(){
   openId = null;
   document.getElementById('m-media').innerHTML = ''; // stops the video
