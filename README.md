@@ -1,2 +1,2 @@
 ## Hi there 👋
-## I'm currently studying at SeaTech School of Engineering.
+# I'm currently studying at SeaTech School of Engineering.
