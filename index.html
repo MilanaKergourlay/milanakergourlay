@@ -223,7 +223,7 @@ const PROJECTS = [
   },
   {
     id: "database",
-    image: "images/database.png",
+    image: "images/database.jpg",
     group: "other",
     topic: { en: "Database", fr: "Base de données" },
     students: 1, // individual project
@@ -248,7 +248,7 @@ const PROJECTS = [
     id: "hydro",
     group: "other",
     topic: { en: "Hydrodynamics", fr: "Hydrodynamique" },
-    image: "images/hydro.webp", // optional: "images/hydro.jpg" (photo or .mp4)
+    image: null, // optional: "images/hydro.jpg" (photo or .mp4)
     students: 5,
     report: "tp_hydro_ondes.pdf", reportFr: true,
     title: { en: "Wave Reflection on a Beach – Wave Flume Lab", fr: "Réflexion de la houle sur une plage – TP canal à houle" },
@@ -271,7 +271,7 @@ const PROJECTS = [
     id: "calc1",
     group: "other",
     topic: { en: "Scientific computing", fr: "Calcul scientifique" },
-    image: "images/calcul-1.png", // optional: "images/calcul-1.jpg"
+    image: null, // optional: "images/calcul-1.jpg"
     students: 3,
     report: "TP1-KERGOURLAY_Milana_JOUVE_Charlotte_GOUZE_Ilona.pdf", reportFr: true,
     title: { en: "Scientific Computing I – Nonlinear Equations", fr: "Calcul scientifique I – Équations non linéaires" },
@@ -294,7 +294,7 @@ const PROJECTS = [
     id: "calc2",
     group: "other",
     topic: { en: "Scientific computing", fr: "Calcul scientifique" },
-    image: "images/calcul-2.png", // optional: "images/calcul-2.jpg"
+    image: null, // optional: "images/calcul-2.jpg"
     students: 3,
     report: "tp_2_Milana_Kergourlay_Clerie_PozinRoux_Ambre_Duchemin_1.pdf", reportFr: false,
     title: { en: "Scientific Computing II – Polynomial Interpolation", fr: "Calcul scientifique II – Interpolation polynomiale" },
@@ -317,7 +317,7 @@ const PROJECTS = [
     id: "calc3",
     group: "other",
     topic: { en: "Scientific computing", fr: "Calcul scientifique" },
-    image: "images/calcul-3.png", // optional: "images/calcul-3.jpg"
+    image: null, // optional: "images/calcul-3.jpg"
     students: 3,
     report: "TP_Int_gration_Num_rique.pdf", reportFr: true,
     title: { en: "Scientific Computing III – Numerical Integration", fr: "Calcul scientifique III – Intégration numérique" },
@@ -337,10 +337,56 @@ const PROJECTS = [
     }
   },
   {
+    id: "calc4",
+    group: "other",
+    topic: { en: "Scientific computing", fr: "Calcul scientifique" },
+    image: null, // optional: "images/calcul-4.jpg"
+    students: 1, // individual report
+    report: "tp4_calcul_scient.pdf", reportFr: true,
+    title: { en: "Scientific Computing IV – Differential Equations", fr: "Calcul scientifique IV – Équations différentielles" },
+    meta:  { en: "SeaTech · Numerical analysis (supervisor: Jacques Schneider) · May 2026", fr: "SeaTech · Analyse numérique (encadrant : Jacques Schneider) · mai 2026" },
+    short: {
+      en: "Comparison of explicit Euler, implicit Euler and second-order Runge-Kutta on three differential equations: error, convergence and stability.",
+      fr: "Comparaison des méthodes d'Euler explicite, d'Euler implicite et de Runge-Kutta d'ordre 2 sur trois équations différentielles : erreur, convergence et stabilité."
+    },
+    tools:  ["Explicit Euler", "Implicit Euler", "Runge-Kutta 2"],
+    skills: {
+      en: ["Numerical analysis", "Stability and convergence", "Error analysis", "Scientific writing"],
+      fr: ["Analyse numérique", "Stabilité et convergence", "Analyse d'erreur", "Rédaction scientifique"]
+    },
+    long: {
+      en: "Individual numerical analysis project.\nGoal: explore and compare three classic methods for solving differential equations numerically: explicit Euler, implicit Euler and second-order Runge-Kutta (RK2).\nWe applied them to three equations: x' = −λx, x' = −λx² and x' = sin(x), each with a known analytical solution. For every equation, we plotted the numerical solutions against the exact one and measured the sup-norm error as a function of the number of steps N.\nResults: on the first equation, the log-log error curves have a slope of −1 for both Euler methods (linear convergence) and −2 for RK2 (quadratic convergence), so RK2 is the most accurate. On the second one, the best method depends on the step size: implicit Euler is the most accurate around N ≈ 100, and RK2 takes over for N > 180. On the third one, all methods converge and RK2 is again the most accurate.\nConclusions: explicit Euler converges only under stability conditions, implicit Euler is always convergent but less accurate than RK2, and RK2 is the most precise but needs more computations at each iteration. The right choice depends on the required accuracy and the available computing time.",
+      fr: "Projet individuel d'analyse numérique.\nObjectif : explorer et comparer trois méthodes classiques de résolution numérique d'équations différentielles : Euler explicite, Euler implicite et Runge-Kutta d'ordre 2 (RK2).\nNous les avons appliquées à trois équations : x' = −λx, x' = −λx² et x' = sin(x), chacune avec une solution analytique connue. Pour chaque équation, nous avons tracé les solutions numériques face à la solution exacte et mesuré la norme infinie de l'erreur en fonction du nombre de pas N.\nRésultats : sur la première équation, les courbes d'erreur en log-log ont une pente de −1 pour les deux méthodes d'Euler (convergence linéaire) et de −2 pour RK2 (convergence quadratique), donc RK2 est la plus précise. Sur la deuxième, la meilleure méthode dépend du pas : Euler implicite est la plus précise autour de N ≈ 100, et RK2 prend le dessus pour N > 180. Sur la troisième, toutes les méthodes convergent et RK2 est encore la plus précise.\nConclusions : Euler explicite ne converge que sous des conditions de stabilité, Euler implicite est toujours convergente mais moins précise que RK2, et RK2 est la plus précise mais demande plus de calculs à chaque itération. Le choix dépend de la précision voulue et du temps de calcul disponible."
+    }
+  },
+  {
+    id: "calc5",
+    group: "other",
+    topic: { en: "Scientific computing", fr: "Calcul scientifique" },
+    image: null, // optional: "images/calcul-5.jpg"
+    students: null, // TODO: number of students (see note in chat)
+    report: "tp5_calcul_scient.pdf", reportFr: true,
+    title: { en: "Scientific Computing V – Finite-Difference Schemes", fr: "Calcul scientifique V – Schémas aux différences finies" },
+    meta:  { en: "SeaTech · Numerical analysis (supervisor: Jacques Schneider) · June 2026", fr: "SeaTech · Analyse numérique (encadrant : Jacques Schneider) · juin 2026" },
+    short: {
+      en: "Analytical and numerical study of finite-difference schemes for the transport equation: numerical diffusion and dispersion, and how to correct them.",
+      fr: "Étude analytique et numérique de schémas aux différences finies pour l'équation de transport : diffusion et dispersion numériques, et leur correction."
+    },
+    tools:  ["MATLAB"],
+    skills: {
+      en: ["Finite difference method", "Taylor expansions", "Numerical scheme analysis", "Scientific writing"],
+      fr: ["Méthode des différences finies", "Développements de Taylor", "Analyse de schémas numériques", "Rédaction scientifique"]
+    },
+    long: {
+      en: "Numerical analysis project on the transport equation ∂u/∂t + c ∂u/∂x = 0, with c = 1.\nGoal: study the finite-difference method with several explicit schemes (downwind, centered, upwind and Lax-Wendroff), both analytically and numerically, to highlight their numerical diffusion and dispersion, and then try to correct them.\nFor each scheme, the analytical part derives the equivalent equation with Taylor expansions, which identifies the diffusion and dispersion terms. The numerical part simulates the scheme in MATLAB and compares its behavior with the theory (for example, the downwind scheme turns out to be unstable). We then add a corrective term to cancel the diffusion or dispersion, which is how the Lax-Wendroff scheme is obtained.\nConclusion: some schemes perform better than others for a given problem, and when a scheme is diffusive or dispersive, a corrective term can fix it. The challenge is then to choose this term and the parameter λ = c δt / δx.",
+      fr: "Projet d'analyse numérique sur l'équation de transport ∂u/∂t + c ∂u/∂x = 0, avec c = 1.\nObjectif : étudier la méthode des différences finies avec plusieurs schémas explicites (décentré aval, centré, décentré amont et Lax-Wendroff), analytiquement et numériquement, pour mettre en évidence leur diffusion et leur dispersion numériques, puis essayer de les corriger.\nPour chaque schéma, la partie analytique établit l'équation équivalente avec des développements de Taylor, ce qui permet d'identifier les termes de diffusion et de dispersion. La partie numérique simule le schéma sous MATLAB et compare son comportement à la théorie (par exemple, le schéma décentré aval se révèle instable). Nous ajoutons ensuite un terme correctif pour annuler la diffusion ou la dispersion, ce qui mène au schéma de Lax-Wendroff.\nConclusion : certains schémas sont plus performants que d'autres pour un problème donné, et quand un schéma est diffusif ou dispersif, un terme correctif permet de le corriger. L'enjeu est alors de choisir ce terme et le paramètre λ = c δt / δx."
+    }
+  },
+  {
     id: "elec",
     group: "other",
     topic: { en: "Electronics", fr: "Électronique" },
-    image: "images/ltspice.png", // optional: "images/ltspice.jpg"
+    image: null, // optional: "images/ltspice.jpg"
     students: 2,
     report: "tp_elec_1.pdf", reportFr: true,
     title: { en: "Circuit Simulation with LTspice", fr: "Simulation de circuits sous LTspice" },
@@ -418,7 +464,12 @@ function mediaHTML(p, withControls){
   return `<img class="thumb" src="${esc(p.image)}" alt="${alt}" loading="lazy" onerror="this.removeAttribute('src');this.style.color='transparent'">`;
 }
 
-function othersList(){ return PROJECTS.filter(p => p.group === 'other'); }
+// Order of the projects inside the "Other projects" box (change the order of these ids to reorder)
+const OTHERS_ORDER = ["elec", "database", "hydro", "calc1", "calc2", "calc3", "calc4", "calc5"];
+function othersList(){
+  const rank = id => { const i = OTHERS_ORDER.indexOf(id); return i < 0 ? 999 : i; };
+  return PROJECTS.filter(p => p.group === 'other').sort((a, b) => rank(a.id) - rank(b.id));
+}
 
 function othersCardHTML(){
   const L = currentLang, list = othersList();
