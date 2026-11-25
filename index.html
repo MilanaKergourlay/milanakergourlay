@@ -182,7 +182,7 @@
 const PROJECTS = [
   {
     id: "dunkerque",
-    image: "images/dunkerque.mp4", // photo (.jpg/.png) or video (.mp4/.webm) both work
+    image: "images/dunkerque.mp4",
     students: 10,
     report: "dunkerque-report.pdf", reportFr: true,
     title: { en: "Port Development Project – Dunkirk", fr: "Projet d'aménagement portuaire – Dunkerque" },
@@ -224,10 +224,10 @@ const PROJECTS = [
   },
   {
     id: "robot",
-    image: "images/robot.png", // optional: "images/robot.jpg" (photo or .mp4)
-    students: 2, // TODO: number of students (null = badge hidden)
+    image: "images/robot.png", 
+    students: 2,
     docsFr: true, // the brief is in French (shows a warning in EN)
-    links: [          // TODO: path to the brief PDF, e.g. "projet-robot-enonce.pdf"
+    links: [         
       { label: { en: "Source code on GitHub", fr: "Code source sur GitHub" }, url: "https://github.com/juliettecorrio/SeaTech_Corrio_Juliette_Kergourlay_Milana" },          // TODO: GitHub repo link                  // TODO (optional): video link
     ],
     title: { en: "Autonomous Mobile Robot – Obstacle Avoidance", fr: "Robot mobile autonome – évitement d'obstacles" },
@@ -248,14 +248,14 @@ const PROJECTS = [
   },
   {
     id: "vehicle",
-    image: "images/simulateur-vehicule.png", // optional: "images/simulateur-vehicule.png"
-    students: 2, // TODO: number of students (max 2 for this project)
-    docsFr: true,
+    image: "images/simulateur-vehicule.png",
+    students: 2, 
+    // docsFr: true, WARNINGS DOC EN FRANCAIS
     links: [
       { label: { en: "Source code on GitHub", fr: "Code source sur GitHub" }, url: "https://github.com/MilanaKergourlay/simulateur_voiture_Milana_Kergourlay_Juliette_Corrio" },          // TODO: GitHub repo link                      // TODO (optional): LaTeX report
     ],
     title: { en: "Vehicle Dynamics Simulator (MATLAB)", fr: "Simulateur de dynamique de véhicule (MATLAB)" },
-    meta:  { en: "SeaTech (SYSMER 2A) · Road vehicle dynamics (supervisor: Dr. Richier) · 2026", fr: "SeaTech (SYSMER 2A) · Dynamique des véhicules routiers (enseignant : Dr Richier) · 2026" },
+    meta:  { en: "SeaTech (SYSMER 2A) · Road vehicle dynamics (supervisor: Mathieu Richier) · 2026", fr: "SeaTech (SYSMER 2A) · Dynamique des véhicules routiers (enseignant : Mathieu Richier) · 2026" },
     short: {
       en: "MATLAB simulator of a road vehicle based on an analytical kinematic and dynamic (bicycle) model: slip angles, yaw rate, trajectory and stability.",
       fr: "Simulateur MATLAB d'un véhicule routier basé sur un modèle analytique cinématique et dynamique (bicyclette) : angles de dérive, vitesse de lacet, trajectoire et stabilité."
@@ -297,7 +297,7 @@ const PROJECTS = [
     id: "hydro",
     group: "other",
     topic: { en: "Hydrodynamics", fr: "Hydrodynamique" },
-    image: "images/hydro.webp", // optional: "images/hydro.jpg" (photo or .mp4)
+    image: "images/hydro.webp", 
     students: 5,
     report: "hydro.pdf", reportFr: true,
     title: { en: "Wave Reflection on a Beach – Wave Flume Lab", fr: "Réflexion de la houle sur une plage – TP canal à houle" },
@@ -320,7 +320,7 @@ const PROJECTS = [
     id: "calc1",
     group: "other",
     topic: { en: "Scientific computing", fr: "Calcul scientifique" },
-    image: "images/calcul-1.png", // optional: "images/calcul-1.jpg"
+    image: "images/calcul-1.png", 
     students: 3,
     report: "calcul-1.pdf", reportFr: true,
     title: { en: "Scientific Computing I – Nonlinear Equations", fr: "Calcul scientifique I – Équations non linéaires" },
