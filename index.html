@@ -164,6 +164,7 @@
       <p id="m-long"></p>
       <div class="note" id="m-note"></div>
       <a class="btn" id="m-report" target="_blank"></a>
+      <span id="m-links"></span>
     </div>
     </div>
   </div>
@@ -222,12 +223,60 @@ const PROJECTS = [
     }
   },
   {
+    id: "robot",
+    image: "images/robot.png", // optional: "images/robot.jpg" (photo or .mp4)
+    students: 2, // TODO: number of students (null = badge hidden)
+    docsFr: true, // the brief is in French (shows a warning in EN)
+    links: [          // TODO: path to the brief PDF, e.g. "projet-robot-enonce.pdf"
+      { label: { en: "Source code on GitHub", fr: "Code source sur GitHub" }, url: "https://github.com/juliettecorrio/SeaTech_Corrio_Juliette_Kergourlay_Milana" },          // TODO: GitHub repo link                  // TODO (optional): video link
+    ],
+    title: { en: "Autonomous Mobile Robot – Obstacle Avoidance", fr: "Robot mobile autonome – évitement d'obstacles" },
+    meta:  { en: "SeaTech (SYSMER 2A) · Embedded electronics project (supervisor: Valentin Gies) · 2026", fr: "SeaTech (SYSMER 2A) · Projet d'électronique embarquée (enseignant : Valentin Gies) · 2026" },
+    short: {
+      en: "C programming of a two-wheeled robot on a dsPIC microcontroller: PWM motor control, infrared rangefinders and a state machine to run an obstacle course.",
+      fr: "Programmation en C d'un robot à deux roues motrices sur microcontrôleur dsPIC : commande PWM des moteurs, télémètres infrarouges et machine à états pour parcourir un circuit d'obstacles."
+    },
+    tools:  ["C", "MPLAB X", "XC16", "dsPIC33EP512MU814", "Oscilloscope"],
+    skills: {
+      en: ["Embedded programming", "Timers & interrupts", "PWM motor control", "ADC & sensors", "State machines"],
+      fr: ["Programmation embarquée", "Timers et interruptions", "Commande PWM de moteurs", "ADC et capteurs", "Machines à états"]
+    },
+    long: {
+      en: "Design and programming in C of a two-wheeled mobile robot able to run an obstacle course on its own. The project starts from scratch: configuring the 16-bit dsPIC33EP512MU814 microcontroller (Microchip) on a dedicated electronic board, then bringing up its peripherals one by one.\nTimers: 16-bit and 32-bit timers to generate periodic events on interrupt, with automatic frequency setting, and a millisecond timestamp used by the whole program.\nMotor control: PWM driving a DC motor H-bridge chopper, in both directions, with speed ramps (a limited acceleration) so that the robot does not slip when starting.\nSensing: infrared rangefinders read through the 12-bit analog-to-digital converter (ADC), with conversion of the voltages into distances using the sensor datasheet curve.\nDecision making: a state machine (GRAFCET-like) that picks the behavior (go forward, turn, turn on the spot) according to the position of the obstacle.\nDebugging was done with MPLAB X (breakpoints, watches) and with an oscilloscope. All the code is available on my GitHub.",
+      fr: "Conception et programmation en C d'un robot mobile à deux roues motrices capable de parcourir un circuit d'obstacles en autonomie. Le projet part de zéro : configuration du microcontrôleur 16 bits dsPIC33EP512MU814 (Microchip) sur une carte électronique dédiée, puis mise en œuvre de ses périphériques un par un.\nTimers : timers 16 et 32 bits pour générer des événements périodiques sur interruption, avec réglage automatique de la fréquence, et un horodatage à la milliseconde utilisé dans tout le programme.\nPilotage des moteurs : PWM pour commander un hacheur en pont en H alimentant un moteur à courant continu, dans les deux sens, avec des rampes de vitesse (accélération limitée) pour éviter le glissement au démarrage.\nCapteurs : télémètres infrarouges lus par le convertisseur analogique-numérique (ADC) 12 bits, avec conversion des tensions en distances à partir de la courbe de la documentation technique.\nPrise de décision : machine à états (type GRAFCET) qui choisit le comportement (avancer, tourner, tourner sur place) selon la position de l'obstacle.\nLe débogage s'est fait avec MPLAB X (points d'arrêt, watches) et à l'oscilloscope. Tout le code est disponible sur mon GitHub."
+    }
+  },
+  {
+    id: "vehicle",
+    image: "images/simulateur-vehicule.png", // optional: "images/simulateur-vehicule.png"
+    students: 2, // TODO: number of students (max 2 for this project)
+    docsFr: true,
+    links: [
+      { label: { en: "Source code on GitHub", fr: "Code source sur GitHub" }, url: "https://github.com/MilanaKergourlay/simulateur_voiture_Milana_Kergourlay_Juliette_Corrio" },          // TODO: GitHub repo link                      // TODO (optional): LaTeX report
+    ],
+    title: { en: "Vehicle Dynamics Simulator (MATLAB)", fr: "Simulateur de dynamique de véhicule (MATLAB)" },
+    meta:  { en: "SeaTech (SYSMER 2A) · Road vehicle dynamics (supervisor: Dr. Richier) · 2026", fr: "SeaTech (SYSMER 2A) · Dynamique des véhicules routiers (enseignant : Dr Richier) · 2026" },
+    short: {
+      en: "MATLAB simulator of a road vehicle based on an analytical kinematic and dynamic (bicycle) model: slip angles, yaw rate, trajectory and stability.",
+      fr: "Simulateur MATLAB d'un véhicule routier basé sur un modèle analytique cinématique et dynamique (bicyclette) : angles de dérive, vitesse de lacet, trajectoire et stabilité."
+    },
+    tools:  ["MATLAB", "LaTeX"],
+    skills: {
+      en: ["Vehicle dynamics", "Dynamic modeling", "Numerical simulation", "Stability analysis", "Scientific writing"],
+      fr: ["Dynamique du véhicule", "Modélisation dynamique", "Simulation numérique", "Analyse de stabilité", "Rédaction scientifique"]
+    },
+    long: {
+      en: "Development of a road vehicle simulator in MATLAB, based on an analytical kinematic and dynamic model (bicycle model). From the speed of the center of gravity and the steering angle, the simulator computes the behavior of the vehicle in a turn. The parameters are those of a real vehicle (mass 1310 kg, yaw inertia 1760 kg·m², front and rear cornering stiffnesses).\nI wrote the dynamic model (force balance and yaw moment equation) and linearized it for small angles.\nThe simulator outputs the slip angles, the actual and no-slip yaw rate, the trajectory and speed of the center of gravity, and the lateral acceleration.\nThree tire contact models can be selected: linear, linear with saturation, and one chosen among those of the course.\nI also studied the stability of the vehicle and its critical speed, then its non-stationary response in a turn (obstacle avoidance, braking...), with a discussion on how realistic the simulator is.\nThe work was written up in a LaTeX report.",
+      fr: "Développement d'un simulateur de véhicule routier sous MATLAB, basé sur un modèle analytique cinématique et dynamique (modèle bicyclette). À partir de la vitesse du centre de gravité et de l'angle de braquage, le simulateur calcule le comportement du véhicule en virage. Les paramètres sont ceux d'un véhicule réel (masse de 1310 kg, inertie en lacet de 1760 kg·m², rigidités de dérive avant et arrière).\nJ'ai mis en équation le modèle dynamique (équilibre des forces et équation du moment en lacet) et l'ai linéarisé aux petits angles.\nLe simulateur fournit les angles de dérive, la vitesse de lacet réelle et sans glissement, la trajectoire et la vitesse du centre de gravité, ainsi que l'accélération latérale.\nTrois modèles de contact pneumatique sont disponibles : linéaire, linéaire avec saturation, et un modèle au choix parmi ceux du cours.\nJ'ai aussi étudié la stabilité du véhicule et sa vitesse critique, puis sa réponse non stationnaire en virage (évitement d'obstacle, freinage...), avec une discussion sur le réalisme du simulateur.\nLe travail a été rédigé dans un rapport LaTeX."
+    }
+  },
+  {
     id: "database",
     image: "images/database.png",
     group: "other",
     topic: { en: "Database", fr: "Base de données" },
     students: 1, // individual project
-    report: "database-report.pdf", reportFr: true,
+    report: "datbase-report.pdf", reportFr: true,
     title: { en: "Database Design – Couture To The Max", fr: "Base de données – Couture To The Max" },
     meta:  { en: "SeaTech, 1st year · Database course (supervisor: Christophe De Luigi) · May 2026", fr: "SeaTech, 1re année · Cours de bases de données (enseignant : Christophe De Luigi) · mai 2026" },
     short: {
@@ -341,7 +390,7 @@ const PROJECTS = [
     group: "other",
     topic: { en: "Scientific computing", fr: "Calcul scientifique" },
     image: "images/calcul-4.png", // optional: "images/calcul-4.jpg"
-    students: null, // individual report
+    students: 1, // individual report
     report: "calcul-4.pdf", reportFr: true,
     title: { en: "Scientific Computing IV – Differential Equations", fr: "Calcul scientifique IV – Équations différentielles" },
     meta:  { en: "SeaTech · Numerical analysis (supervisor: Jacques Schneider) · May 2026", fr: "SeaTech · Analyse numérique (encadrant : Jacques Schneider) · mai 2026" },
@@ -404,6 +453,29 @@ const PROJECTS = [
       en: "Electronics lab done in pairs with LTspice, the free circuit simulator from Analog Devices. Simulation lets us observe the behavior of a circuit much faster than building it and measuring it with an oscilloscope.\nPart 1: learn schematic capture in LTspice by simulating a capacitive relaxation astable oscillator and electronic filters.\nPart 2: study the behavior of a brushed DC motor and of the switching transistors that drive it.",
       fr: "TP d'électronique réalisé en binôme avec LTspice, le simulateur de circuits gratuit d'Analog Devices. La simulation permet d'observer le comportement d'un circuit bien plus vite qu'en le montant et en le mesurant à l'oscilloscope.\nPartie 1 : prise en main de la saisie de schéma sous LTspice avec la simulation d'un oscillateur astable à relaxation capacitif et de filtres électroniques.\nPartie 2 : étude du comportement d'un moteur à courant continu à balais et des transistors de commutation qui le pilotent."
     }
+  },
+  {
+    id: "turtlebot",
+    group: "other",
+    topic: { en: "Robotics", fr: "Robotique" },
+    image: "images/turtlebot.mp4", // optional: "images/turtlebot.jpg" (photo or .mp4)
+    students: null, // TODO: number of students
+    report: null,
+    title: { en: "TurtleBot Kobuki with ROS 2", fr: "TurtleBot Kobuki avec ROS 2" },
+    meta:  { en: "SeaTech, 2A SYSMER · Computer science lab (supervisor: Guilleray) · November 2026", fr: "SeaTech, 2A SYSMER · TP d'informatique (enseignant : Guilleray) · novembre 2026" },
+    short: {
+      en: "Hands-on with a TurtleBot Kobuki under ROS 2 Jazzy, in simulation then on the real robot: nodes, topics, networking and launch files.",
+      fr: "Prise en main d'un TurtleBot Kobuki sous ROS 2 Jazzy, en simulation puis sur le robot réel : nœuds, topics, réseau et launch files."
+    },
+    tools:  ["ROS 2 Jazzy", "Python", "Ubuntu 24.04", "RQT", "SSH"],
+    skills: {
+      en: ["ROS 2", "System debugging", "Networking", "Launch files"],
+      fr: ["ROS 2", "Débogage de système", "Réseau", "Launch files"]
+    },
+    long: {
+      en: "Lab work to learn how a ROS 2 system works, first in simulation and then on a real TurtleBot Kobuki robot.\nI explored the Kobuki packages and launch files, and observed and debugged the nodes and topics with RQT (topic monitor, node graph).\nI drove the robot with a game controller (teleop), in simulation and on the real robot, which meant remapping the velocity topic.\nOn the real robot, I configured the Wi-Fi network (static IP address, gateway), connected over SSH, and set the ROS domain and discovery range so that only my computer talked to the robot.\nFinally, I wrote launch files that group several commands, remap topics (for example the camera) and add a namespace, so the robot runs with a single command.\nA presentation video shows the result.",
+      fr: "TP pour comprendre le fonctionnement d'un système ROS 2, d'abord en simulation puis sur un vrai robot TurtleBot Kobuki.\nJ'ai exploré les packages et les launch files du Kobuki, et observé et débogué les nœuds et les topics avec RQT (topic monitor, graphe des nœuds).\nJ'ai piloté le robot à la manette (teleop), en simulation puis sur le robot réel, ce qui a demandé de remapper le topic de vitesse.\nSur le robot réel, j'ai configuré le réseau Wi-Fi (adresse IP fixe, passerelle), me suis connectée en SSH, et réglé le domaine ROS et la portée de découverte pour que seul mon ordinateur communique avec le robot.\nEnfin, j'ai écrit des launch files qui regroupent plusieurs commandes, remappent des topics (par exemple la caméra) et ajoutent un namespace, pour lancer le robot en une seule commande.\nUne vidéo de présentation montre le résultat."
+    }
   }
 ];
 
@@ -416,7 +488,7 @@ const T = {
     download_cv:"Download my CV (English)", read_report:"Read the report",
     projects_intro:"Click on a project to see more details and the full report.",
     others_title:"Other projects", others_intro:"Lab work and course projects. Click on one to see its details and report.",
-    others_short:"Database, hydrodynamics, scientific computing and electronics projects from my engineering courses.",
+    others_short:"Robotics, database, hydrodynamics, scientific computing and electronics projects from my engineering courses.",
     n_projects:"projects", back_others:"← Other projects", see_all:"See all projects →",
     students_n:"students", student_1:"student",
     tools:"Tools used", skills_dev:"Skills developed", details:"Project details", see_more:"See details →",
@@ -433,7 +505,7 @@ const T = {
     download_cv:"Télécharger mon CV (français)", read_report:"Lire le rapport",
     projects_intro:"Clique sur un projet pour voir plus de détails et le rapport complet.",
     others_title:"Autres projets", others_intro:"Travaux pratiques et projets de cours. Clique sur un projet pour voir les détails et le rapport.",
-    others_short:"Projets de base de données, d'hydrodynamique, de calcul scientifique et d'électronique réalisés pendant ma formation d'ingénieure.",
+    others_short:"Projets de robotique, de base de données, d'hydrodynamique, de calcul scientifique et d'électronique réalisés pendant ma formation d'ingénieure.",
     n_projects:"projets", back_others:"← Autres projets", see_all:"Voir tous les projets →",
     students_n:"étudiants", student_1:"étudiant",
     tools:"Outils utilisés", skills_dev:"Compétences développées", details:"Détails du projet", see_more:"Voir le détail →",
@@ -465,7 +537,7 @@ function mediaHTML(p, withControls){
 }
 
 // Order of the projects inside the "Other projects" box (change the order of these ids to reorder)
-const OTHERS_ORDER = ["elec", "database", "hydro", "calc1", "calc2", "calc3", "calc4", "calc5"];
+const OTHERS_ORDER = ["turtlebot", "elec", "database", "hydro", "calc1", "calc2", "calc3", "calc4", "calc5"];
 function othersList(){
   const rank = id => { const i = OTHERS_ORDER.indexOf(id); return i < 0 ? 999 : i; };
   return PROJECTS.filter(p => p.group === 'other').sort((a, b) => rank(a.id) - rank(b.id));
@@ -545,10 +617,13 @@ function fillModal(){
   document.getElementById('m-tools').innerHTML = p.tools.map(t => `<span>${esc(t)}</span>`).join('');
   document.getElementById('m-skills').innerHTML = p.skills[L].map(s => `<span>${esc(s)}</span>`).join('');
   document.getElementById('m-long').textContent = p.long[L];
-  document.getElementById('m-note').textContent = (p.report && p.reportFr && L === 'en') ? T.en.fr_warning : '';
+  document.getElementById('m-note').textContent = (((p.report && p.reportFr) || p.docsFr) && L === 'en') ? T.en.fr_warning : '';
   const r = document.getElementById('m-report');
   if (p.report) { r.href = p.report; r.textContent = T[L].read_report; r.style.display = ''; }
   else { r.style.display = 'none'; }
+  // extra links (brief, GitHub, video...): only shown once a url is filled in
+  document.getElementById('m-links').innerHTML = (p.links || []).filter(l => l.url).map(l =>
+    `<a class="btn" href="${esc(l.url)}" target="_blank" rel="noopener">${esc(l.label[L])}</a>`).join('');
 }
 
 function showModal(id){
